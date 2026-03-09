@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Elmalimia Brain</title>
+
+<style>
+  body { margin: 0; overflow: hidden; background: black; }
+  canvas { display: block; }
+
+  button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    z-index: 10;
+  }
+
+  #info {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    font: 14px system-ui;
+    pointer-events: none;
+    display: none;
+    z-index: 9;
+  }
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "/assets/three/build/three.module.js",
+    "three/examples/jsm/": "/assets/three/examples/jsm/"
+  }
+}
+</script>
+
+</head>
+<body>
+
+<button onclick="activateDopamine()">СТИМУЛ</button>
+
+<div id="info">
+  <b>Дофамин</b><br>
+  Ошибка предсказания награды
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
+
+let brain;
+let anchor;
+
+const stats = new Stats();
+stats.showPanel(0); // 0 = FPS
+document.body.appendChild(stats.dom);
+
+
+const infoEl = document.getElementById('info');
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+  60,
+  window.innerWidth / window.innerHeight,
+  0.01,
+  1000
+);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x111111, 1);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+document.body.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+
+const light = new THREE.DirectionalLight(0xffffff, 2.5);
+light.position.set(3,5,2);
+scene.add(light);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+const loader = new GLTFLoader();
+loader.load(
+  '/assets/models/brain.glb',
+  (gltf) => {
+    brain = gltf.scene;
+    scene.add(brain);
+
+    // авто-центр
+    const box = new THREE.Box3().setFromObject(brain);
+    const size = box.getSize(new THREE.Vector3()).length();
+    const center = box.getCenter(new THREE.Vector3());
+
+    brain.position.sub(center);
+
+    camera.near = size / 100;
+    camera.far = size * 100;
+    camera.updateProjectionMatrix();
+    camera.position.set(0,0,size * 1.2);
+
+    controls.target.set(0,0,0);
+    controls.update();
+
+    // --- anchor на мозге ---
+    anchor = new THREE.Object3D();
+    anchor.position.set(0.15,0.10,0.05); // пока тестовая точка
+    brain.add(anchor);
+
+    infoEl.style.display = 'block';
+  },
+  undefined,
+  (err) => console.error('GLB load error:', err)
+);
+
+function activateDopamine() {
+  if (!brain) return;
+  brain.traverse((child)=>{
+    if (child.isMesh && child.material){
+      child.material.emissive = new THREE.Color(0xff00ff);
+      child.material.emissiveIntensity = 2;
+      child.material.needsUpdate = true;
+    }
+  });
+  setTimeout(()=>{
+    brain.traverse((child)=>{
+      if (child.isMesh && child.material){
+        child.material.emissiveIntensity = 0;
+      }
+    });
+  },800);
+}
+window.activateDopamine = activateDopamine;
+
+function updateInfoPosition(){
+  if(!brain || !anchor) return;
+
+  const pos = new THREE.Vector3();
+  anchor.getWorldPosition(pos);
+
+  pos.project(camera);
+
+  const x = (pos.x * 0.5 + 0.5) * window.innerWidth;
+  const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+
+  infoEl.style.left = `${x}px`;
+  infoEl.style.top = `${y}px`;
+
+  infoEl.style.visibility = (pos.z < 1) ? 'visible' : 'hidden';
+}
+
+function animate(){
+  stats.begin();
+  requestAnimationFrame(animate);
+  if(brain) brain.rotation.y += 0.003;
+  controls.update();
+  updateInfoPosition();
+  renderer.render(scene,camera);
+  stats.end();
+}
+animate();
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>
