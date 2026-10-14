@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>elmalimia NEWS — Новости</title>
+  <meta name="description" content="elmalimia NEWS — новости математического мира elmalimia.">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #171717; color: #f2f3f8; font: 16px/1.6 Arial, sans-serif; }
+    header { max-width: 1200px; margin: 0 auto; padding: 20px 22px; background: #0b0e14; display: flex; justify-content: space-between; align-items: center; }
+    header strong { font-size: 24px; }
+    header span { color: #a5b3cb; font-size: 12px; letter-spacing: .15em; }
+    main { max-width: 1200px; margin: 24px auto; padding: 0 12px; }
+    .news-item { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 10px; margin-bottom: 24px; background: #0b0e14; }
+    .news-image { display: block; width: 45%; flex: 0 0 45%; height: auto; object-fit: cover; object-position: center top; }
+    .news-text { flex: 1; min-width: 0; padding: 24px; }
+    .news-text h2 { font-size: clamp(21px, 3vw, 42px); line-height: 1.14; margin: 8px 0 22px; }
+    .news-text p { margin: 0 0 18px; }
+    .news-date { color: #a5b3cb; font-size: 13px; }
+    /* HorizontalBox остаётся горизонтальным даже при малой ширине. */
+    @media (max-width: 650px) {
+      main { overflow-x: auto; }
+      .news-item { min-width: 680px; }
+      header { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header><strong>elmalimia NEWS</strong><span>НОВОСТНАЯ СЛУЖБА</span></header>
+  <main>
+    <!-- НАЧАЛО НОВОСТИ: скопируй весь div.news-item, чтобы добавить ещё одну. -->
+    <div class="news-item">
+      <img class="news-image" src="images/elya.jpg" alt="Эля, ведущая elmalimia NEWS">
+      <div class="news-text">
+        <div class="news-date">15 октября 2026 года · elmalimia NEWS</div>
+        <h2>В elmalimia открылась служба новостей</h2>
+        <p>В виртуальном мире elmalimia начала работу собственная служба новостей — elmalimia NEWS.</p>
+        <p>Новая редакция будет освещать события математической вселенной elmalimia, следить за развитием её технологий, персонажей и необычных происшествий.</p>
+        <p>Открытие службы новостей стало первым событием, о котором сообщила сама служба новостей.</p>
+        <p>На данный момент редакция продолжает формироваться.</p>
+        <p><strong>elmalimia NEWS — новости начинаются здесь.</strong></p>
+      </div>
+    </div>
+    <!-- КОНЕЦ НОВОСТИ -->
+
+    <!-- Скопируй блок выше сюда для второй, третьей и следующих новостей. -->
+  </main>
+</body>
+</html>
