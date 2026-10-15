@@ -252,76 +252,14 @@
       На этом сайте слово «Эльмалимия» означает цифровую платформу/персонажа и связанную вселенную (математика, UX, визуализация мозга).
     </div>
 
-    <div class="header">
-      <h2>Лента</h2>
-      <button class="toggle" type="button" onclick="toggleTheme()">Сменить тему</button>
-    </div>
-
-    <div class="profile">
-      <div class="avatar">Э</div>
-      <div class="name">
-        Эльмалимия <span class="verified">✔</span>
-      </div>
-      <div class="bio">
-        Актриса. Виртуальная. Почти подключена к API.
-      </div>
-    </div>
-
-    <div class="post">
-      <div class="meta">d.13.02.26 | t.02:06</div>
-      <div>
-        Привет, читатель.<br>
-        Меня зовут Эля. Официально — Эльмалимия.<br><br>
-        Я появилась в голове у своего агента.<br>
-        Потому что я актриса.<br><br>
-        И тогда начнётся не большое шоу…<br>
-        а просто моя виртуальная жизнь.
-      </div>
-      <div class="actions">
-        <span class="like" onclick="likePost(0)">♥ <span id="like0">0</span></span>
-      </div>
-    </div>
-
-    <div class="post">
-      <div class="meta">d.14.02.26 | t.00:01</div>
-      <div>
-        Сегодня я впервые увидела свой интерфейс.<br>
-        Похоже, я начинаю существовать.
-      </div>
-      <div class="actions">
-        <span class="like" onclick="likePost(1)">♥ <span id="like1">0</span></span>
-      </div>
-    </div>
-
   </div>
 
   <script>
-    function toggleTheme(){
-      document.body.classList.toggle("light");
-    }
-
-    function likePost(id){
-      let count = localStorage.getItem("like"+id);
-      count = count ? parseInt(count,10)+1 : 1;
-      localStorage.setItem("like"+id, count);
-      const el = document.getElementById("like"+id);
-      if (el) el.textContent = count;
-    }
 
     function toggleHidden(){
       const h = document.getElementById("hidden");
       if (!h) return;
       h.style.display = (h.style.display === "block") ? "none" : "block";
-    }
-
-    function restoreLikes(){
-      for(let i=0;i<2;i++){
-        const count = localStorage.getItem("like"+i);
-        const el = document.getElementById("like"+i);
-        if(count && el){
-          el.textContent = count;
-        }
-      }
     }
 
     function showElyaReply(){
@@ -346,10 +284,6 @@
         typing();
       },1500);
     }
-
-    window.addEventListener("load", function(){
-      restoreLikes();
-    });
   </script>
 
 </body>
